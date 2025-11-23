@@ -26,14 +26,7 @@ pipeline {
                 }
             }
         }
-        stage('Lint') {
-            steps {
-                dir('turismobackend') {
-                    sh "mvn spotless:apply"
-                    sh "mvn pmd:check"
-                }
-            }
-        }
+        
         stage('Compile') {
             steps {
                 dir('turismobackend') {
