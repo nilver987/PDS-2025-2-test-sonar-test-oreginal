@@ -31,7 +31,7 @@ pipeline {
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
                     dir('turismobackend') {
-                        sh "mvn -U test"
+                        sh "mvn -U -Dspring.profiles.active=test test"
                     }
                 }
             }
