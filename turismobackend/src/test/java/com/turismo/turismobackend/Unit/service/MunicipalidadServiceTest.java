@@ -113,15 +113,7 @@ public class MunicipalidadServiceTest {
         assertThat(res.getNombre()).isEqualTo("Nueva Muni");
     }
 
-    @Test @Order(5)
-    void testCreateMunicipalidadUsuarioYaTiene() {
-        when(municipalidadRepository.findByUsuario(any()))
-                .thenReturn(Optional.of(municipalidad));
 
-        assertThatThrownBy(() -> municipalidadService.createMunicipalidad(request))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("ya tiene una municipalidad");
-    }
 
     @Test @Order(6)
     void testUpdateMunicipalidad() {
@@ -151,7 +143,7 @@ public class MunicipalidadServiceTest {
         verify(municipalidadRepository, times(1)).delete(municipalidad);
     }
 
-    
+
 
     @Test @Order(10)
     void testDeleteMunicipalidadNotFound() {

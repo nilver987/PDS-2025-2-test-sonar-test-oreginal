@@ -6,18 +6,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-	    <groupId>org.springframework.boot</groupId>
-	    <artifactId>spring-boot-starter-parent</artifactId>
-	    <version>3.3.4</version>
-	    <relativePath/> 
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.4</version>
+		<relativePath/>
 	</parent>
-
 
 	<groupId>com.turismo</groupId>
 	<artifactId>turismobackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>turismobackend</name>
-	<description>Backend para sistema de turismo</description>
 
 	<properties>
 		<java.version>17</java.version>
@@ -25,7 +23,7 @@
 
 	<dependencies>
 
-		<!-- Spring Boot Core -->
+		<!-- CORE -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -41,23 +39,21 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- Validaciones -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!-- Websocket -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
-		<!-- Swagger -->
+		<!-- Swagger FIX (versión compatible con Spring Boot 3.3.x) -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.8.8</version>
+			<version>2.5.0</version>
 		</dependency>
 
 		<!-- MySQL -->
@@ -73,17 +69,26 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20240303</version>
 		</dependency>
 
 		<!-- Jackson -->
@@ -107,53 +112,38 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- JSON (para JSONObject) -->
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20240303</version>
-		</dependency>
-
 		<!-- ====================== TESTS ====================== -->
 
-		<!-- Test principal -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Seguridad en test -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- WebTestClient requiere WebFlux SOLO PARA TESTS -->
+		<!-- WebFlux solo para WebTestClient -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Base de datos de test (opcional) -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- RestAssured (opcional) -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-
-
-
 
 	</dependencies>
 
@@ -164,61 +154,38 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- ====================================================== -->
-			<!-- ==============      Para Sonar Qube      ============== -->
-			<!-- ====================================================== -->
 
+			<!-- Jacoco -->
 			<plugin>
-				<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.10</version>
-
 				<executions>
-
-					<!-- Prepara el agente para capturar cobertura -->
 					<execution>
 						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
+						<goals><goal>prepare-agent</goal></goals>
 					</execution>
 
-					<!-- Genera el reporte XML para Sonar -->
 					<execution>
 						<id>report</id>
-						<goals>
-							<goal>report</goal>
-						</goals>
+						<goals><goal>report</goal></goals>
 						<configuration>
 							<formats>
 								<format>XML</format>
 							</formats>
 						</configuration>
 					</execution>
-
 				</executions>
 			</plugin>
 
-			<!-- ====================================================== -->
-			<!-- ==============    Fin Config Jacoco       ============ -->
-			<!-- ====================================================== -->
-
+			<!-- SonarQube plugin funcionando -->
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.10.0.2594</version>
+			</plugin>
 
 		</plugins>
-
 	</build>
-
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases><enabled>false</enabled></releases>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<url>https://repo.spring.io/milestone</url>
-		</repository>
-	</repositories>
 
 </project>
