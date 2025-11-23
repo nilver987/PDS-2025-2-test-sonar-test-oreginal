@@ -12,7 +12,7 @@ pipeline {
                 timeout(time: 2, unit: 'MINUTES'){
                     git branch: 'main', 
                         credentialsId: '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', 
-                        url: 'https://github.com/nilver987/PDS-2025-2-test-sonar-test.git'
+                        url: 'https://github.com/nilver987/PDS-2025-2-test-sonar-test-oreginal.git'
                 }
             }
         }
