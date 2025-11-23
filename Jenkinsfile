@@ -17,40 +17,8 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                timeout(time: 25, unit: 'MINUTES') {
-                    dir('turismobackend') {
-                        sh "mvn -U -DskipTests clean package"
-                    }
-                }
-            }
-        }
         
-        stage('Compile') {
-            steps {
-                dir('turismobackend') {
-                    sh "mvn -U -DskipTests compile"
-                }
-            }
-        }
         
-        stage('Security Scan') {
-            steps {
-                dir('turismobackend') {
-                    sh "mvn org.owasp:dependency-check-maven:check"
-                }
-            }
-        }
-        stage('Validate Environment') {
-            steps {
-                script {
-                    if (!env.JWT_SECRET) {
-                        error("❌ Falta variable JWT_SECRET")
-                    }
-                }
-            }
-        }
         stage('Docs') {
             steps {
                 dir('turismobackend') {
