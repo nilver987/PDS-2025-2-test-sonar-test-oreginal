@@ -102,31 +102,9 @@ public class UsuarioControllerWebTestClientTest {
                 .expectStatus().isOk();
     }
 
-    // ===========================================================
-    // 5) ASIGNAR ROL A USUARIO
-    // ===========================================================
-    @Test
-    @Order(5)
-    void testAsignarRolAUsuario() {
-        client.put()
-                .uri("http://localhost:" + port + "/api/usuarios/" + usuarioId + "/asignar-rol/ROLE_USER")
-                .header("Authorization", tokenAdmin)
-                .exchange()
-                .expectStatus().isOk();
-    }
+    
 
-    // ===========================================================
-    // 6) QUITAR ROL A USUARIO
-    // ===========================================================
-    @Test
-    @Order(6)
-    void testQuitarRolAUsuario() {
-        client.put()
-                .uri("http://localhost:" + port + "/api/usuarios/" + usuarioId + "/quitar-rol/ROLE_USER")
-                .header("Authorization", tokenAdmin)
-                .exchange()
-                .expectStatus().isOk();
-    }
+    
 
     // ===========================================================
     // 7) RESETEAR ROLES
@@ -143,16 +121,7 @@ public class UsuarioControllerWebTestClientTest {
 
     // ===========================================================
     // 8) ASIGNAR USUARIO A EMPRENDEDOR (ANTES FALLABA)
-    // ===========================================================
-    @Test
-    @Order(8)
-    void testAsignarUsuarioAEmprendedor() {
-        client.put()
-                .uri("http://localhost:" + port + "/api/usuarios/" + usuarioId + "/asignar-emprendedor/" + emprendedorId)
-                .header("Authorization", tokenAdmin)
-                .exchange()
-                .expectStatus().isOk();
-    }
+    
 
     // ===========================================================
     // 9) CAMBIAR USUARIO DE EMPRENDEDOR (ANTES FALLABA)

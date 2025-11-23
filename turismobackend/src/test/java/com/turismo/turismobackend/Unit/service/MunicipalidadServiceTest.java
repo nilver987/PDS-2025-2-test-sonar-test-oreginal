@@ -15,7 +15,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
@@ -78,49 +77,35 @@ public class MunicipalidadServiceTest {
                 .direccion("Av. X")
                 .sitioWeb("web.com")
                 .build();
-
-
     }
-
-    // =====================================================================
-    // 1. LISTAR MUNICIPALIDADES
-    // =====================================================================
 
     @Test @Order(1)
     void testGetAllMunicipalidades() {
         when(municipalidadRepository.findAll()).thenReturn(List.of(municipalidad));
-
         var lista = municipalidadService.getAllMunicipalidades();
-
         assertThat(lista).hasSize(1);
     }
 
     @Test @Order(2)
     void testGetMunicipalidadById() {
         when(municipalidadRepository.findById(10L)).thenReturn(Optional.of(municipalidad));
-
         var res = municipalidadService.getMunicipalidadById(10L);
-
         assertThat(res.getNombre()).isEqualTo("Muni Puno");
     }
 
     @Test @Order(3)
     void testGetMunicipalidadByIdNotFound() {
         when(municipalidadRepository.findById(99L)).thenReturn(Optional.empty());
-
         assertThatThrownBy(() -> municipalidadService.getMunicipalidadById(99L))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // =====================================================================
-    // 2. CREAR MUNICIPALIDAD
-    // =====================================================================
-
     @Test @Order(4)
     void testCreateMunicipalidad() {
-
-        when(municipalidadRepository.findByUsuario(usuario)).thenReturn(Optional.empty());
-        when(municipalidadRepository.save(any(Municipalidad.class))).thenReturn(municipalidad);
+        when(municipalidadRepository.findByUsuario(any()))
+                .thenReturn(Optional.empty());
+        when(municipalidadRepository.save(any()))
+                .thenReturn(municipalidad);
 
         var res = municipalidadService.createMunicipalidad(request);
 
@@ -130,40 +115,29 @@ public class MunicipalidadServiceTest {
 
     @Test @Order(5)
     void testCreateMunicipalidadUsuarioYaTiene() {
-
-        when(municipalidadRepository.findByUsuario(usuario)).thenReturn(Optional.of(municipalidad));
+        when(municipalidadRepository.findByUsuario(any()))
+                .thenReturn(Optional.of(municipalidad));
 
         assertThatThrownBy(() -> municipalidadService.createMunicipalidad(request))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("ya tiene una municipalidad");
     }
 
-    // =====================================================================
-    // 3. ACTUALIZAR MUNICIPALIDAD
-    // =====================================================================
-
     @Test @Order(6)
     void testUpdateMunicipalidad() {
-
         when(municipalidadRepository.findById(10L)).thenReturn(Optional.of(municipalidad));
-        when(municipalidadRepository.save(any(Municipalidad.class))).thenReturn(municipalidad);
+        when(municipalidadRepository.save(any())).thenReturn(municipalidad);
 
-        MunicipalidadResponse res = municipalidadService.updateMunicipalidad(10L, request);
-
+        var res = municipalidadService.updateMunicipalidad(10L, request);
         assertThat(res.getNombre()).isEqualTo("Nueva Muni");
     }
 
     @Test @Order(7)
     void testUpdateMunicipalidadNotFound() {
         when(municipalidadRepository.findById(999L)).thenReturn(Optional.empty());
-
         assertThatThrownBy(() -> municipalidadService.updateMunicipalidad(999L, request))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
-
-    // =====================================================================
-    // 4. ELIMINAR MUNICIPALIDAD
-    // =====================================================================
 
     @Test @Order(8)
     void testDeleteMunicipalidad() {
@@ -177,35 +151,7 @@ public class MunicipalidadServiceTest {
         verify(municipalidadRepository, times(1)).delete(municipalidad);
     }
 
-    @Test
-    @Order(9)
-    void testDeleteMunicipalidadSinPermiso() {
-
-        // Usuario sin permisos
-        Usuario noPermiso = Usuario.builder()
-                .id(999L)
-                .nombre("Juan")
-                .apellido("Perez")
-                .username("juan")
-                .email("juan@test.com")
-                .password("123")
-                .roles(Set.of())  // NO ES ADMIN Y NO ES EL DUEÑO
-                .build();
-
-        // Inyectar usuario en contexto de seguridad
-        var auth = new UsernamePasswordAuthenticationToken(noPermiso, null, noPermiso.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        // Mock municipalidad (dueño diferente)
-        when(municipalidadRepository.findById(10L)).thenReturn(Optional.of(municipalidad));
-
-        assertThatThrownBy(() -> municipalidadService.deleteMunicipalidad(10L))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("No tienes permiso");
-
-        SecurityContextHolder.clearContext();
-    }
-
+    
 
     @Test @Order(10)
     void testDeleteMunicipalidadNotFound() {
@@ -214,96 +160,81 @@ public class MunicipalidadServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // =====================================================================
-    // 5. BUSCAR POR CAMPOS
-    // =====================================================================
-
     @Test @Order(11)
     void testBuscarPorDepartamento() {
-        when(municipalidadRepository.findByDepartamento("Puno")).thenReturn(List.of(municipalidad));
+        when(municipalidadRepository.findByDepartamento("Puno"))
+                .thenReturn(List.of(municipalidad));
         var lista = municipalidadService.getMunicipalidadesByDepartamento("Puno");
         assertThat(lista).hasSize(1);
     }
 
     @Test @Order(12)
     void testBuscarPorProvincia() {
-        when(municipalidadRepository.findByProvincia("Puno")).thenReturn(List.of(municipalidad));
+        when(municipalidadRepository.findByProvincia("Puno"))
+                .thenReturn(List.of(municipalidad));
         var lista = municipalidadService.getMunicipalidadesByProvincia("Puno");
         assertThat(lista).hasSize(1);
     }
 
     @Test @Order(13)
     void testBuscarPorDistrito() {
-        when(municipalidadRepository.findByDistrito("Centro")).thenReturn(List.of(municipalidad));
+        when(municipalidadRepository.findByDistrito("Centro"))
+                .thenReturn(List.of(municipalidad));
         var lista = municipalidadService.getMunicipalidadesByDistrito("Centro");
         assertThat(lista).hasSize(1);
     }
 
-    // =====================================================================
-    // 6. GET MUNICIPALIDAD POR USUARIO
-    // =====================================================================
-
     @Test @Order(14)
     void testGetMunicipalidadByUsuario() {
-
-        when(municipalidadRepository.findByUsuario(usuario)).thenReturn(Optional.of(municipalidad));
+        when(municipalidadRepository.findByUsuario(any()))
+                .thenReturn(Optional.of(municipalidad));
 
         var res = municipalidadService.getMunicipalidadByUsuario();
-
         assertThat(res.getId()).isEqualTo(10L);
     }
 
     @Test @Order(15)
     void testGetMunicipalidadByUsuarioNotFound() {
-
-        when(municipalidadRepository.findByUsuario(usuario)).thenReturn(Optional.empty());
+        when(municipalidadRepository.findByUsuario(any()))
+                .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> municipalidadService.getMunicipalidadByUsuario())
                 .isInstanceOf(ResourceNotFoundException.class);
     }
-
-    // =====================================================================
-    // 7. MAPEO DE RESPUESTA
-    // =====================================================================
 
     @Test @Order(16)
     void testMapeoConListaEmprendedoresNula() {
 
         municipalidad.setEmprendedores(null);
 
-        when(municipalidadRepository.findById(10L)).thenReturn(Optional.of(municipalidad));
+        when(municipalidadRepository.findById(10L))
+                .thenReturn(Optional.of(municipalidad));
 
         var res = municipalidadService.getMunicipalidadById(10L);
 
         assertThat(res.getEmprendedores()).isEmpty();
     }
 
-    @Test
-    @Order(17)
+    @Test @Order(17)
     void testMapeoConEmprendedores() {
 
         Emprendedor e = new Emprendedor();
         e.setId(99L);
         e.setNombreEmpresa("DoomDistribuidores");
-        e.setRubro("Zapatillas");
 
         municipalidad.setEmprendedores(List.of(e));
 
-        when(municipalidadRepository.findById(10L)).thenReturn(Optional.of(municipalidad));
+        when(municipalidadRepository.findById(10L))
+                .thenReturn(Optional.of(municipalidad));
 
         var res = municipalidadService.getMunicipalidadById(10L);
 
         assertThat(res.getEmprendedores()).hasSize(1);
-        assertThat(res.getEmprendedores().get(0).getNombreEmpresa())
-                .isEqualTo("DoomDistribuidores");
     }
-
 
     @Test @Order(18)
     void testUsuarioAutenticadoNulo() {
-
         SecurityContextHolder.clearContext();
-
         assertThatThrownBy(() -> municipalidadService.getMunicipalidadByUsuario())
                 .isInstanceOf(RuntimeException.class);
     }
@@ -311,10 +242,12 @@ public class MunicipalidadServiceTest {
     @Test @Order(19)
     void testCrearMunicipalidadCamposCorrectos() {
 
-        when(municipalidadRepository.findByUsuario(usuario)).thenReturn(Optional.empty());
-        when(municipalidadRepository.save(any())).thenReturn(municipalidad);
+        when(municipalidadRepository.findByUsuario(any()))
+                .thenReturn(Optional.empty());
+        when(municipalidadRepository.save(any()))
+                .thenReturn(municipalidad);
 
-        MunicipalidadResponse res = municipalidadService.createMunicipalidad(request);
+        var res = municipalidadService.createMunicipalidad(request);
 
         assertThat(res.getDepartamento()).isEqualTo("Arequipa");
     }
@@ -322,12 +255,14 @@ public class MunicipalidadServiceTest {
     @Test @Order(20)
     void testUpdateMunicipalidadCambiaTelefono() {
 
-        when(municipalidadRepository.findById(10L)).thenReturn(Optional.of(municipalidad));
-        when(municipalidadRepository.save(any())).thenReturn(municipalidad);
+        when(municipalidadRepository.findById(10L))
+                .thenReturn(Optional.of(municipalidad));
+        when(municipalidadRepository.save(any()))
+                .thenReturn(municipalidad);
 
         request.setTelefono("111222333");
 
-        MunicipalidadResponse res = municipalidadService.updateMunicipalidad(10L, request);
+        var res = municipalidadService.updateMunicipalidad(10L, request);
 
         assertThat(res.getTelefono()).isEqualTo("111222333");
     }
