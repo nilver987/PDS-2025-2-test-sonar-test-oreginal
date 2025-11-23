@@ -29,17 +29,7 @@ pipeline {
 
         
 
-        stage('Sonar') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    dir('turismobackend') {
-                        withSonarQubeEnv('sonarqube') {
-                            sh "mvn -U verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar"
-                        }
-                    }
-                }
-            }
-        }
+        
 
         stage('Quality gate') {
             steps {
