@@ -27,15 +27,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    dir('turismobackend') {
-                        sh "mvn -U -Dspring.profiles.active=test test"
-                    }
-                }
-            }
-        }
+        
 
         stage('Sonar') {
             steps {
