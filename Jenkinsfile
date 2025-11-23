@@ -9,7 +9,7 @@ pipeline {
 
         stage('Clone') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
+                timeout(time: 3, unit: 'MINUTES') {
                     git branch: 'main',
                         credentialsId: 'githubtoken1',
                         url: 'https://github.com/nilver987/PDS-2025-2-test-sonar-test-oreginal.git'
@@ -19,25 +19,31 @@ pipeline {
 
         stage('Build') {
             steps {
-                timeout(time: 100, unit: 'MINUTES') {
-                    sh "mvn -U -DskipTests clean package -f turismobackend/pom.xml"
+                timeout(time: 25, unit: 'MINUTES') {
+                    dir('turismobackend') {
+                        sh "mvn -U -DskipTests clean package"
+                    }
                 }
             }
         }
 
         stage('Test') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    sh "mvn -U clean test -f turismobackend/pom.xml"
+                timeout(time: 15, unit: 'MINUTES') {
+                    dir('turismobackend') {
+                        sh "mvn -U test"
+                    }
                 }
             }
         }
 
         stage('Sonar') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    withSonarQubeEnv('sonarqube') {
-                        sh "mvn -U verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar -Dsonar.projectKey=turismo -f turismobackend/pom.xml"
+                timeout(time: 10, unit: 'MINUTES') {
+                    dir('turismobackend') {
+                        withSonarQubeEnv('sonarqube') {
+                            sh "mvn -U verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar"
+                        }
                     }
                 }
             }
@@ -45,7 +51,7 @@ pipeline {
 
         stage('Quality gate') {
             steps {
-                timeout(time: 3, unit: 'MINUTES') {
+                timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -53,9 +59,11 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Iniciando deploy (simulado)..."
-                echo "spring-boot:run -f turismobackend/pom.xml"
+                dir('turismobackend') {
+                    echo "spring-boot:run ..."
+                }
             }
         }
+
     }
 }
