@@ -19,7 +19,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {
+                timeout(time: 100, unit: 'MINUTES') {
                     sh "mvn -U -DskipTests clean package -f turismobackend/pom.xml"
                 }
             }
