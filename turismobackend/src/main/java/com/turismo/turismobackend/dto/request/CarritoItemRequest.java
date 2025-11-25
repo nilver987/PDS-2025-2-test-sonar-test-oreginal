@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CarritoItemRequest {
     
-    @NotNull(message = "El ID del servicio es obligatorio")
+    @NotNull(message = "El ID del servicio esxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx obligatorio")
     private Long servicioId;
     
     @NotNull(message = "La cantidad es obligatoria")
