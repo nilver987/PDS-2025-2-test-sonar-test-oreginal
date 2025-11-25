@@ -24,7 +24,7 @@ public class CarritoItemRequest {
     private Integer cantidad;
     
     @NotNull(message = "La fecha del servicio es obligatoria")
-    @Future(message = "La fecha del servicio debe ser futura")
+    @Future(message = "La fecha del servicio debe ser futura cccccccccc")
     private LocalDate fechaServicio;
     
     private String notasEspeciales;
