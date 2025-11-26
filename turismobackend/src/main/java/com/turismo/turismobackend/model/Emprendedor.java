@@ -29,7 +29,7 @@ public class Emprendedor {
     
     private String direccion;
     
-    // NUEVOS CAMPOS DE UBICACIÓN
+    // NUEVOS CAMPOS DE UBICACIÓN ssssssssssssssssssssssssssssssss
     @Column(name = "latitud")
     private Double latitud;
     
